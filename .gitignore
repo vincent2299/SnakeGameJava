@@ -1,0 +1,9 @@
+# Ignore compiled Java classes
+backend/*.class
+
+# Ignore Node modules and build files
+frontend/node_modules/
+frontend/dist/
+
+# OS hidden files
+.DS_Store
