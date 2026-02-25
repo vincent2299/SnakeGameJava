@@ -41,7 +41,46 @@ public class GameServer {
         return false; // indicate that the request should be processed normally
     }
 
-    
+    // end points
+
+    // converts the game engine state to json and sends it back to the client
+    static class StateHandler implements HttpHandler {
+        private GameEngine engine;
+
+        public StateHandler(GameEngine engine) {
+            this.engine = engine;
+        }
+
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (handleCors(exchange)) return; // handle CORS preflight
+
+            // convert the game state to json
+            StringBuilder json = new StringBuilder("{");
+            json.append("\"score\":").append(engine.score).append(",");
+            json.append("\"gameOver\":").append(engine.isGameOver).append(",");
+            json.append("\"food\":{\"x\":").append(engine.food.x).append(",\"y\":").append(engine.food.y).append("},");
+            
+            json.append("\"snake\":[");
+
+            // convert the snake body points to json array
+            for (int i = 0; i < engine.snake.size(); i++) {
+                Point p = engine.snake.get(i);
+                json.append("{\"x\":").append(engine.snake.get(i).x).append(",\"y\":").append(engine.snake.get(i).y).append("}");
+                if (i < engine.snake.size() - 1) json.append(",");
+            }
+            json.append("]}");
+            
+            // send the json response
+            byte[] response = json.toString().getBytes();
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.sendResponseHeaders(200, response.length);
+            try (OutputStream os = exchange.getResponseBody()) { os.write(response); }
+        }
+    }
+}
+
+
 
 
 
