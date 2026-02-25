@@ -5,7 +5,7 @@ import './App.css'
 
 function App() {
   // Game state variables
-  const [count, setCount] = useState(0)
+  const canvasRef = useRef(null);
   const [score, setScore] = useState(0)
   const [status, setStatus] = useState("Press Start")
   const gridSize = 20;
@@ -19,6 +19,8 @@ function App() {
       if (event.key === 'ArrowDown') direction = 'DOWN';
       if (event.key === 'ArrowLeft') direction = 'LEFT';
       if (event.key === 'ArrowRight') direction = 'RIGHT';
+
+
       if (direction) {
         // Update snake direction
         fetch("http://localhost:8080/api/input", { method: "POST", body: direction })
@@ -48,6 +50,7 @@ function App() {
           setStatus("Server offline");
         }
       }, 100);
+      
       return () => clearInterval(interval); // Cleanup on unmount
     }, []);
 
