@@ -84,3 +84,7 @@ The React frontend communicates with Java via these endpoints:
 ## 📄 License
 MIT License
 
+<<<<<<< HEAD
+=======
+---
+>>>>>>> 185c9f6cf5eafc71d148c4850a1e0d670c5025ea
