@@ -41,7 +41,8 @@ function App() {
 
           // Update game state variables
           setScore(state.score);
-          setStatus(state.status ? "GAME OVER!" : "Playing...");
+
+          setStatus(state.gameOver ? "GAME OVER!" : "Playing...");
           draw(state); // Function to render game state on canvas
           // Update snake and food positions as needed
         } catch (err) {
@@ -63,13 +64,13 @@ function App() {
       if (!state.food || !state.snake) return; // Wait for valid state
 
       // Draw food
-      ctx.fillStyle = "red";
-      ctx.fillRect(state.food.x * gridSize, state.food.y * gridSize, gridSize, gridSize);
+      ctx.fillStyle = "#e94560";
+      ctx.fillRect(state.food.x, state.food.y, gridSize - 2, gridSize - 2);
 
       // Draw snake
-      ctx.fillStyle = "green";
+      ctx.fillStyle = "#00adb5";
       state.snake.forEach(segment => {
-        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+      ctx.fillRect(segment.x, segment.y, gridSize - 2, gridSize - 2);
       });
     };
 
