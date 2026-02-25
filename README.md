@@ -84,14 +84,3 @@ The React frontend communicates with Java via these endpoints:
 ## 📄 License
 MIT License
 
----
-
-### 💡 Portfolio Tip
-**Take a screenshot of your game!**
-1. Run the game.
-2. Take a screenshot (Windows: `Win+Shift+S`, Mac: `Cmd+Shift+4`).
-3. Drag that image into your GitHub repository file list to upload it.
-4. Click on the uploaded image to get its URL.
-5. Replace the `via.placeholder.com` link in the README above with your actual image URL.
-
-This makes the repo look 10x more professional immediately.
