@@ -28,6 +28,20 @@ public class GameServer {
 
     }
 
+    // cors utility to allow reacto to access the api
+    public static boolean handleCors(HttpExchange exchange) throws IOException {
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+
+        if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+            exchange.sendResponseHeaders(204, -1); // No content for preflight
+            return true; // indicate that the request was handled
+        }
+        return false; // indicate that the request should be processed normally
+    }
+
+    
 
 
 
