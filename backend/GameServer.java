@@ -1,9 +1,9 @@
 package backend;
 
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpHandler;
+import backend.GameServer.StartHandler;
 import com.sun.net.httpserver.HttpExchange;
-
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import java.io.*;
 import java.net.InetSocketAddress;
 
@@ -20,7 +20,7 @@ public class GameServer {
         // map urls to http handlers, passing the engine to them
         server.createContext("/api/state", new StateHandler(engine));
         server.createContext("/api/input", new InputHandler(engine));
-        server.createContext("/api/start". new StartHandler(engine));
+        server.createContext("/api/start", new StartHandler(engine));
 
         server.setExecutor(null); // use default executor
         server.start();
@@ -58,7 +58,7 @@ public class GameServer {
             // convert the game state to json
             StringBuilder json = new StringBuilder("{");
             json.append("\"score\":").append(engine.score).append(",");
-            json.append("\"gameOver\":").append(engine.isGameOver).append(",");
+            json.append("\"gameOver\":").append(engine.isgameOver).append(",");
             json.append("\"food\":{\"x\":").append(engine.food.x).append(",\"y\":").append(engine.food.y).append("},");
             
             json.append("\"snake\":[");
@@ -78,6 +78,49 @@ public class GameServer {
             try (OutputStream os = exchange.getResponseBody()) { os.write(response); }
         }
     }
+
+    // reads arrow keys sent from react
+    static class InputHandler implements HttpHandler {
+
+        // reference to the game engine to update the direction based on client input
+        private GameEngine engine;
+
+        public InputHandler(GameEngine engine) { 
+            this.engine = engine; 
+        }
+
+        public void handle(HttpExchange exchange) throws IOException {
+            // handle CORS preflight
+            if (handleCors(exchange)) return;
+
+            // read the new direction from the request body and update the game engine
+            String newDir = new String(exchange.getRequestBody().readAllBytes());
+            engine.updateDirection(newDir);
+            
+            // send a simple response back to the client
+            exchange.sendResponseHeaders(200, 0);
+            exchange.getResponseBody().close();
+        }
+    }
+
+    // starts a new game by resetting the game engine state
+    static class StartHandler implements HttpHandler {
+        private GameEngine engine;
+
+        public StartHandler(GameEngine engine) {
+            this.engine = engine;
+        }
+
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (handleCors(exchange)) return; // handle CORS preflight
+
+            engine.resetGame();
+            
+            exchange.sendResponseHeaders(200, 0);
+            exchange.getResponseBody().close();
+        }
+    }
 }
 
 
@@ -89,4 +132,3 @@ public class GameServer {
 
 
 
-}
